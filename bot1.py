@@ -4,16 +4,31 @@ import settings
 
 
 
-root_logger= logging.getLogger()
-root_logger.setLevel(logging.INFO)
-handler = logging.FileHandler('bot1.log', 'w', 'utf-8')
-handler.setFormatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-root_logger.addHandler(handler)
+# error_logger= logging.getLogger()
+# error_logger.setLevel(logging.INFO)
+# handler = logging.FileHandler('bot1_stat.log', 'w', 'utf-8')
+# handler.setFormatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+# error_logger.addHandler(handler)
+
+
+formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+
+
+def setup_logger(name, log_file, level):
+
+    handler = logging.FileHandler(log_file, 'w', 'utf-8')        
+    handler.setFormatter(formatter)
+
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    logger.addHandler(handler)
+
+    return logger
 
 
 def greet_user(bot, update):
     greet_text = "Вызван /start"
-    logging.info(greet_text)
+    logging.error(greet_text)
     update.message.reply_text(greet_text)
 
 
@@ -36,5 +51,8 @@ def main():
     my_bot.start_polling()
     my_bot.idle()
 
+
+info_logger = setup_logger("info_logger","bot1_info.log", logging.INFO)
+err_logger = setup_logger("err_logger","bot1_err.log", logging.ERROR)
 
 main()
